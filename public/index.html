@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="index.css" type="text/css" />
+<script type="text/javascript" src="bower_components/requirejs/require.js"></script>
+<script type="text/javascript">
+requirejs.config({
+	  baseUrl: '.',
+	  paths: {
+	    'jquery': 'bower_components/jquery/dist/jquery.min',
+	    'underscore': 'bower_components/underscore/underscore-min',
+	    'backbone': 'bower_components/backbone/backbone',
+	    'async': 'bower_components/async/index'
+	  },
+	  shim: {
+	    'jquery': {
+	      exports: 'jQuery'
+	    },
+	    'backbone': {
+	      deps: ['jquery', 'underscore'],
+	      exports: 'Backbone',
+	    },
+	    'underscore': {
+	      exports: '_'
+	    }
+	  }
+	});
+</script>
+</head>
+<body>
+<canvas class="chart" width="1" height="1"></canvas>
+
+<script type="text/javascript">
+require(['js/Controller'], function(Controller){
+	new Controller();
+});
+</script>
+</body>
+</html>
