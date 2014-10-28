@@ -33,7 +33,7 @@ define(['./View', 'async', 'backbone'], function(View, async){
 				result.n++;				
 				return result; 
 			}
-			iterate(6, createIterationStepTask(func), createInitValues(), onIterationReady);
+			iterate(60, createIterationStepTask(func), createInitValues(), onIterationReady);
 		}
 		
 		function onIterationReady(){
@@ -41,8 +41,11 @@ define(['./View', 'async', 'backbone'], function(View, async){
 		}
 		
 		function createInitValues(){
-			return [{x : 0.3, y : 0, n : 0, initValueId : 0},
-			         {x : 0.4, y : 0, n : 0, initValueId : 1}];
+			var values = [];			
+			for(var i = 0; i < 200; i++){
+				values.push({x : i/200, y : 0, n : 0, initValueId : i});				
+			}
+			return values;
 		}	
 		
 		/**

@@ -1,0 +1,6 @@
+move the simulation to node
+the simulation must take place in subprocess and message to controller when step is done
+broadcast results of steps to the browser via websocket and display
+use backbone only on client side
+
+try to use three.js + tjQuery to display 3-d simulations
