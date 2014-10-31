@@ -17,3 +17,8 @@ data analysis basic characteristics automatically
  
 Important for this is to make trigger simulation via rest with differenct start-values and parameters applied
 to the function.
+
+One measure for the data analysis could be the Hausdorff distance between to simulations based on a set of 
+start values and for different parameter.
+The it is of interest if parameter-values have clusters which produce similar simulations (Hausdorff-distance is small 
+between two in a cluster).
