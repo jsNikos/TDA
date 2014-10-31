@@ -4,3 +4,16 @@ broadcast results of steps to the browser via websocket and display
 use backbone only on client side
 
 try to use three.js + tjQuery to display 3-d simulations
+
+ask to get support for topological data analysis of simulated data
+for this provide a web-service which can be used to get simulations for
+different start-values in parallel
+The measure of the analysis could be attractive sets, periodic orbits, 
+chaotic behaviour
+The idea is to use it when the model is very complex and a pure mathematical
+treatment is time costly.
+The system could be used to test models very quickly and getting from the
+data analysis basic characteristics automatically
+ 
+Important for this is to make trigger simulation via rest with differenct start-values and parameters applied
+to the function.

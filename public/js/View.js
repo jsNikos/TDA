@@ -1,68 +1,38 @@
-define(function(){
+define(function(){  
 	return View;
-	
+
 	function View(args){
-		var controller = args.controller;
-		
-		// options
-		var chartHeight = 300;
-		var chartWidth = 500;
-		
-		var x0, y0, x1, y1; // coord-sys
-		
+		var controller = args.controller;		
+
 		// el
-		var $chart = jQuery('.chart');
-		var chartCtx = $chart.get(0).getContext('2d');
+		var $el = jQuery('.container');
 		
 		function init(){
-			initCoordSys([{x:0,y:0}, {x:1,y:1}])
-			$chart.attr('height', chartHeight)
-				  .attr('width', chartWidth);			
+			initLinkList();
+			initSimulationControl();
+		}	
+
+		function initSimulationControl(){
+			jQuery('.simulationControl', $el).on('click', 'button', function(event){
+				var $button = jQuery(event.target);				
+				switch ($button.attr('data-role')) {
+				case 'start': controller.handleStartClicked();
+					break;
+				case 'stop': controller.handleStopClicked();
+					break;
+				default:
+					throw new Error('Not supported data-role');
+					break;
+				}
+			});
 		}
 		
-		/**
-		 * @param coordSys : [{x,y}, {x,y}]; // lower left, upper right
-		 */
-		function initCoordSys(coordSys){
-			x0 = coordSys[0].x;
-			y0 = coordSys[0].y;
-			x1 = coordSys[1].x;
-			y1 = coordSys[1].y;
+		function initLinkList(){
+			jQuery('[data-toggle="offcanvas"]', $el).click(function () {
+				jQuery('.row-offcanvas').toggleClass('active');
+			});
 		}
-		
-		/**
-		 * Transforms coordinates into chart-coordinate system (canvas).
-		 * @param coord : {x,y}
-		 * @returns {x, y} : coordinates w.r.t canvas
-		 */
-		function toChartCoord(coord) {
-			var x = coord.x;
-			var y = coord.y;
-			return {
-				x : chartWidth * (x - x0) / (x1 - x0),
-				y : chartHeight - chartHeight * (y - y0) / (y1 - y0)
-			};
-		}
-		
-		this.show = function(results){			
-			console.log(results.toJSON());	
-			drawPoints(results.toJSON());
-		};
-		
-		/**
-		 * Draws point into canvas.
-		 * @param coords : {x,y} (mathematical coordinates), can be array of coordinates
-		 */
-		function drawPoints(coords) {
-			if (!_.isArray(coords)) {
-				coords = [ coords ];
-			}
-			_.each(coords, function(coord) {
-				var chartCoord = toChartCoord(coord);
-				chartCtx.fillRect(chartCoord.x, chartCoord.y, 1, 1);
-			})
-		}
-		
+
 		init();
 	}
 });

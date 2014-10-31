@@ -1,11 +1,13 @@
-define(['./View', 'async', 'backbone'], function(View, async){
+define(['./View', './ChartView', 'async', 'backbone', 'bootstrap'], 
+function(View, ChartView, async){
 	return Controller;
 	/**
 	 * For simulation a dynamic system.
 	 */
 	function Controller(){
 		var scope = this;
-		var view = new View({controller: this}); 
+		var view = new View({controller: this});
+		var chartView = new ChartView({controller: this});		
 		
 		var Result = Backbone.Model.extend({
 			defaults : {
@@ -23,74 +25,45 @@ define(['./View', 'async', 'backbone'], function(View, async){
 		var results = new Results();
 		
 		function init(){
-			var func = function(item){
-				var prev = item.y;
-				if(item.n === 0){
-					prev = item.x;
-				}				
-				var result = _.extend({}, item);
-				result.y = 4*prev*(1-prev);
-				result.n++;				
-				return result; 
-			}
-			iterate(60, createIterationStepTask(func), createInitValues(), onIterationReady);
+			initWebSocket();					
 		}
 		
-		function onIterationReady(){
-			view.show(results);
-		}
-		
-		function createInitValues(){
-			var values = [];			
-			for(var i = 0; i < 200; i++){
-				values.push({x : i/200, y : 0, n : 0, initValueId : i});				
-			}
-			return values;
-		}	
+		this.handleStartClicked =function() {
+			jQuery.ajax({url:'/startSimulation',
+				type: 'POST'
+			});
+		};
+
+		this.handleStopClicked =function() {
+			jQuery.ajax({url:'/stopSimulation',
+				type: 'POST'
+			});
+		};
 		
 		/**
-		 * Triggers the dynamic system given by func to be iterated with 'steps'-iterations.
-		 * In each iteration the result of previous 'func'-call becomes the new argument.
-		 * Fills the results-model.
-		 * @param steps: max iteration steps
-		 * @param iterationStepTask : function(item, callback(err, result))
-		 * @param initValues: [item], init-values to apply on function
-		 * @param onReady: called when iteration is done
+		 * Initializes websocket.
+		 * @param callback: function(err, webSocket) - called when ready
 		 */
-		function iterate(steps, iterationStepTask, initValues, onReady){
-			onReady = onReady || function(){};
-			if(steps <= 0){
-				onReady();
-				return;
-			}
-			async.map(initValues, iterationStepTask, onStepReady); 				
-			
-			function onStepReady(err, values){
-				if(err){
-					console.error(err);
-					throw new Error(err);
-				}
-				results.add(values); 
-				iterate(steps-1, iterationStepTask, values, onReady);				
-			}
-		}	
-		
-		/**
-		 * Creates iteration-step-task for given function.
-		 */
-		function createIterationStepTask(func){
-			return function(item, callback){
-				var err = undefined;
-				var result = undefined;
-				try{
-					// catch only this, otherwise later calls on same run-stack are catched here too
-					result = func.call(this, item);
-				}catch(e){
-					err = e;
-				}
-				callback(err, result);							
-			}
+		function initWebSocket(callback) {
+			callback = callback || function() {
+			};
+			var webSocket = new WebSocket('ws://' + location.host);
+			webSocket.onopen = function(event) {
+				callback(null, webSocket);
+			};
+			webSocket.onerror = function(err) {
+				callback(err);
+			};
+			webSocket.onmessage = function(event) {
+				handleWebSocketMsg(event.data);
+			};
 		}
+		
+		function handleWebSocketMsg(results){
+			setTimeout(function(){
+				chartView.show(JSON.parse(results));
+			}, 10);
+		}		
 		
 		init();
 	}
