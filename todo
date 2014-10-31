@@ -22,3 +22,6 @@ One measure for the data analysis could be the Hausdorff distance between to sim
 start values and for different parameter.
 The it is of interest if parameter-values have clusters which produce similar simulations (Hausdorff-distance is small 
 between two in a cluster).
+
+Data-analysis could be implemented in a separate R server which is invoked from node. And node serves the
+simulated data to their via web-service.
