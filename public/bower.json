@@ -16,9 +16,16 @@
   "dependencies": {
     "jquery": "~2.1.1",
     "requirejs": "~2.1.15",
+    "require-css": "~0.1.5",
+    "text": "https://github.com/requirejs/text.git#~2.0.12",
     "underscore": "~1.7.0",
     "backbone": "~1.1.2",
     "async": "https://raw.githubusercontent.com/caolan/async/master/lib/async.js",
-    "bootstrap": "~3.3.0"
+    "bootstrap": "~3.3.0",
+    "prefixer.less": "https://raw.githubusercontent.com/JoelSutherland/LESS-Prefixer/master/prefixer.less",
+    "animo.js": "*",
+    "animate.css": "~3.2.0",
+    "parsequery": "https://raw.githubusercontent.com/rapportive-oss/jquery-parsequery/master/jquery.parsequery.js",
+    "EventEmitter": "https://raw.githubusercontent.com/jsNikos/utils/master/EventEmitter.js"
   }
 }

@@ -14,8 +14,8 @@ function Simulator(){
 
 		simulation
 		  .on('message', function(msg) {
-			try{				
-				broadcaster.send(JSON.stringify(msg));
+			try{								
+				broadcaster.send('simulation-result', null, msg);
 			}catch(err){
 				console.error(err.stack);
 			}})

@@ -1,69 +1,66 @@
-define(['./View', './ChartView', 'async', 'backbone', 'bootstrap'], 
-function(View, ChartView, async){
+define(['./View',
+        'async', 'BaseContentController', 'webSocketController', 'utils',
+        'handleError', 'backbone', 'bootstrap', 'parseQuery'], 
+function(View, async, BaseContentController, webSocketController, utils, handleError){
 	return Controller;
 	/**
 	 * For simulation a dynamic system.
 	 */
 	function Controller(){
 		var scope = this;
-		var view = new View({controller: this});
-		var chartView = new ChartView({controller: this});		
+		var view = new View({controller: this});		
+		var currentContentController = undefined;	
+		var pageRootPath = undefined; // is set to page's root path (form where it is served)
 		
-		var Result = Backbone.Model.extend({
-			defaults : {
-				x : 0,
-				y : 0,
-				z : 0,
-				n : 0,  // iteration-step
-				color: '#000000',
-				initValueId : 0
-			}
-		});
-		var Results = Backbone.Collection.extend({
-			model: Result
-		});		
-		var results = new Results();
+		// new content must register controller here, type: BaseContentController
+		var contentRegister = {
+			'simulations' : 'contents/simulations/SimulationsContentController',
+			'complexes': 'contents/complexes/ComplexesContentController'
+		};		
 		
 		function init(){
-			initWebSocket();					
-		}
+			async.series([
+			              webSocketController.init.bind(null, {}),
+			              utils.asTask(initRouter)
+			              ], function(err){
+				err && handleError(err);
+			});					
+		}		
 		
-		this.handleStartClicked =function() {
-			jQuery.ajax({url:'/startSimulation',
-				type: 'POST'
-			});
-		};
-
-		this.handleStopClicked =function() {
-			jQuery.ajax({url:'/stopSimulation',
-				type: 'POST'
-			});
-		};
+		function initRouter(){
+			var Router = Backbone.Router.extend({
+				  routes: {
+					    '*path': showContent, // matches all path and splits query-part	 
+					  }});
+			router = new Router();
+			Backbone.history.start({pushState: true});
+		}
 		
 		/**
-		 * Initializes websocket.
-		 * @param callback: function(err, webSocket) - called when ready
+		 * Based on the given parameters requires for the corresponding controller,
+		 * initiates and triggers page-transition on pageView.
+		 * @param path : url-path
+		 * @param query : query-params, the 'content' is used to extract view, the rest is given the content-controller as argument
 		 */
-		function initWebSocket(callback) {
-			callback = callback || function() {
-			};
-			var webSocket = new WebSocket('ws://' + location.host);
-			webSocket.onopen = function(event) {
-				callback(null, webSocket);
-			};
-			webSocket.onerror = function(err) {
-				callback(err);
-			};
-			webSocket.onmessage = function(event) {
-				handleWebSocketMsg(event.data);
-			};
-		}
-		
-		function handleWebSocketMsg(results){
-			setTimeout(function(){
-				chartView.show(JSON.parse(results));
-			}, 10);
-		}		
+		function showContent(path, query){
+			pageRootPath = pageRootPath || path; // first time-set
+			var urlState = jQuery.parseQuery(query);
+			urlState.content = urlState.content || 'simulations';
+			var controllerUri = contentRegister[urlState.content];			
+			if(!controllerUri){
+				throw new Error('This content-name is not registered, '+urlState.content);
+			}
+			require([controllerUri], function(Controller){		
+				var formerContentController = currentContentController;
+				currentContentController = new Controller(urlState);
+				currentContentController
+				    .on(BaseContentController.READY, function(){
+				    	async.series([view.createHideContentTask(formerContentController),
+				    	              view.createShowContentTask(currentContentController)]);					
+					 })
+					.init();
+			});
+		}				
 		
 		init();
 	}

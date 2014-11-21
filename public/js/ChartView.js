@@ -1,8 +1,10 @@
 define(function(){  
 	return ChartView;
 	
+	/**
+	 * For displaying points in a 2-dim coordinate system.
+	 */
 	function ChartView(args){
-		var controller = args.controller;
 		
 		// options
 		var chartHeight = 300;
@@ -11,7 +13,7 @@ define(function(){
 		var x0, y0, x1, y1; // coord-sys
 		
 		// el
-		var $chart = jQuery('.chart');
+		var $chart = jQuery('.chart', args.$context);
 		var chartCtx = $chart.get(0).getContext('2d');
 		
 		function init(){
@@ -44,6 +46,10 @@ define(function(){
 			};
 		}
 		
+		/**
+		 * Adds given points to chart.
+		 * @param results : [{x: number, y: number}], the coordinates
+		 */
 		this.show = function(results){
 			drawPoints(results);
 		};

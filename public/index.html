@@ -2,113 +2,109 @@
 <html>
 <head>
 <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
 <title>Insert title here</title>
-<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css"  />
-<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" type="text/css"  />
-<link rel="stylesheet" href="index.css" type="text/css" />
-<script type="text/javascript" src="bower_components/requirejs/require.js"></script>
+<link rel="stylesheet"
+	href="bower_components/bootstrap/dist/css/bootstrap.min.css"
+	type="text/css" />
+<link rel="stylesheet"
+	href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css"
+	type="text/css" />
+<script type="text/javascript"
+	src="bower_components/requirejs/require.js"></script>
 <script type="text/javascript">
-requirejs.config({
-	  baseUrl: '.',
-	  paths: {
-	    'jquery': 'bower_components/jquery/dist/jquery.min',
-	    'underscore': 'bower_components/underscore/underscore-min',
-	    'backbone': 'bower_components/backbone/backbone',
-	    'async': 'bower_components/async/index',
-	    'bootstrap': 'bower_components/bootstrap/dist/js/bootstrap.min'
-	  },
-	  shim: {
-	    'jquery': {
-	      exports: 'jQuery'
-	    },
-	    'backbone': {
-	      deps: ['jquery', 'underscore'],
-	      exports: 'Backbone',
-	    },
-	    'underscore': {
-	      exports: '_'
-	    },
-	    'bootstrap':{
-	    	deps: ['jquery']
-	    }
-	  }
+	requirejs.config({
+		baseUrl : '.',
+		paths : {
+			'jquery' : 'bower_components/jquery/dist/jquery.min',
+			'underscore' : 'bower_components/underscore/underscore-min',
+			'backbone' : 'bower_components/backbone/backbone',
+			'async' : 'bower_components/async/index',
+			'bootstrap' : 'bower_components/bootstrap/dist/js/bootstrap.min',
+			'animojs' : 'bower_components/animo.js/animo',
+			'animocss' : 'bower_components/animo.js/animate+animo',
+			'animate' : 'bower_components/animate.css/animate.min',
+			'parseQuery' : 'bower_components/parsequery/index',
+			'EventEmitter' : 'bower_components/EventEmitter/index',
+			'BaseContentController' : 'contents/BaseContentController',
+			'BaseContentView': 'contents/BaseContentView',
+			'ChartView' : 'js/ChartView',
+			'handleError' : 'js/handleError',
+			'webSocketController': 'js/webSocketController',
+			'utils': 'js/utils'
+		},
+		shim : {
+			'jquery' : {
+				exports : 'jQuery'
+			},
+			'backbone' : {
+				deps : [ 'jquery', 'underscore' ],
+				exports : 'Backbone',
+			},
+			'underscore' : {
+				exports : '_'
+			},
+			'bootstrap' : {
+				deps : [ 'jquery' ]
+			},
+			'parseQuery' : {
+				deps : [ 'jquery' ]
+			}
+		},
+		map : {
+			'*' : {
+				'css' : 'bower_components/require-css/css.js',
+				'text' : 'bower_components/text/text.js'
+			}
+		}
 	});
 </script>
 </head>
 <body>
-<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!-- /.nav-collapse -->
-      </div><!-- /.container -->
-    </nav><!-- /.navbar -->
+	<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Project name</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#about">About</a></li>
+					<li><a href="#simulations">Simulations</a></li>
+					<li><a href="#complex">Complexes</a></li>
+				</ul>
+			</div>
+			<!-- /.nav-collapse -->
+		</div>
+		<!-- /.container -->
+	</nav>
+	<!-- /.navbar -->
 
-    <div class="container">
+	<div class="container content">
+		<!-- content is rendered here -->
+	</div>
 
-      <div class="row row-offcanvas row-offcanvas-right">
-
-        <div class="col-xs-12 col-sm-9">
-          <p class="pull-right visible-xs">
-            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
-          </p>
-          <div class="jumbotron">            
-            <p>Simulation</p>
-            <div class="simulationControl">
-            	<button class="btn btn-default" data-role="start" type="button">start</button>
-            	<button class="btn btn-default" data-role="stop" type="button">stop</button>
-            </div>
-          </div>
-         <canvas class="chart"></canvas>
-        </div><!--/.col-xs-12.col-sm-9-->
-
-        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
-          <div class="list-group">
-            <a href="#" class="list-group-item active">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-          </div>
-        </div><!--/.sidebar-offcanvas-->
-      </div><!--/row-->
-
-      <hr>
-
-      <footer>
-        <p>&copy; Company 2014</p>
-      </footer>
-
-    </div><!--/.container-->
+	<div class="footer">
+		<div class="container">
+			<p class="text-muted">Topological Data Analysis of Dynamic Systems</p>
+		</div>
+	</div>
 
 
-<script type="text/javascript">
-require(['js/Controller'], function(Controller){
-	new Controller();
-});
-
-</script>
+	<script type="text/javascript">
+		require([ 'js/Controller' ], function(Controller) {
+			new Controller();
+		});
+	</script>
 </body>
 </html>

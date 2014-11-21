@@ -23,10 +23,13 @@ function Broadcaster(){
 	
 	/**
 	 * Sends given message to all connections.
+	 * @param channel : string
+	 * @param detail : object
+	 * @param data : object
 	 */
-	this.send = function(msg){
+	this.send = function(channel, detail, data){
 		_.chain(connections).each(function(connection){
-			connection.sendUTF(msg);
+			connection.sendUTF(JSON.stringify({channel: channel, detail: detail, data: data}));
 		});
 	};
 }

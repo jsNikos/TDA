@@ -1,37 +1,55 @@
-define(function(){  
+define(['css!index', 'css!animate', 'animojs'], function(){  
 	return View;
 
 	function View(args){
 		var controller = args.controller;		
-
-		// el
-		var $el = jQuery('.container');
+		
+		// el's
+		var $el = jQuery('body');	
+		var $content = jQuery('.container.content', $el);
 		
 		function init(){
-			initLinkList();
-			initSimulationControl();
+			
 		}	
 
-		function initSimulationControl(){
-			jQuery('.simulationControl', $el).on('click', 'button', function(event){
-				var $button = jQuery(event.target);				
-				switch ($button.attr('data-role')) {
-				case 'start': controller.handleStartClicked();
-					break;
-				case 'stop': controller.handleStopClicked();
-					break;
-				default:
-					throw new Error('Not supported data-role');
-					break;
-				}
-			});
-		}
+		/**
+		 * Shows content based on the given content-controller.
+		 * @param baseContentController : BaseContentController 
+		 */
+		this.createShowContentTask = function(contentController){
+			return function(callback){				
+				contentController.show($content);
+				contentController.view.$el.animo({				
+					animation: 'fadeInDown', 
+					duration: 0.3				
+				}, function(){					
+					callback && callback();
+				});			
+				
+			};
+		};
 		
-		function initLinkList(){
-			jQuery('[data-toggle="offcanvas"]', $el).click(function () {
-				jQuery('.row-offcanvas').toggleClass('active');
-			});
-		}
+		/**
+		 * Triggers to hide the content of the given contentController.
+		 * @param contentController : BaseContentController
+		 */
+		this.createHideContentTask = function(contentController){
+			return function(callback){
+				callback = callback || function(){};
+				if(!contentController){
+					callback();
+					return;
+				}
+				var $target = contentController.view.$el;			
+				contentController.view.$el.animo({				
+					animation: 'fadeOut', 
+					duration: 0.3				
+				}, function(){
+					$target.remove();
+					callback();
+				});			
+			};
+		};
 
 		init();
 	}

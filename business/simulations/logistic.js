@@ -4,6 +4,9 @@
 var _ = require('underscore');
 module.exports = new Logistic();
 
+/**
+ * Sends after each iteration step message to parent-process with result as data.
+ */
 function Logistic(){
 	var scope = this;
 	var task = {stop: function(){}, // call to stop task
