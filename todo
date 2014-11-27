@@ -1,5 +1,4 @@
 client:
-- init menu in View.js and imeplement content for complexes
 
 - complexes is based on a VR-complex, data can either be uploaded or obtained from a simulation
 - results can be stored in client-side db and retrieved via link
