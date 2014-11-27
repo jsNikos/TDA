@@ -10,7 +10,7 @@ function(View, async, BaseContentController, webSocketController, utils, handleE
 		var scope = this;
 		var view = new View({controller: this});		
 		var currentContentController = undefined;	
-		var pageRootPath = undefined; // is set to page's root path (form where it is served)
+		var pageRootPath = ''; // is set to page's root path (form where it is served)
 		
 		// new content must register controller here, type: BaseContentController
 		var contentRegister = {
@@ -60,7 +60,14 @@ function(View, async, BaseContentController, webSocketController, utils, handleE
 					 })
 					.init();
 			});
-		}				
+		}	
+		
+		/**
+		 * @param navTarget : via name as registered in 'contentRegister'
+		 */
+		this.handleMenuItemClicked = function(navTarget){
+			router.navigate(pageRootPath+'?'+jQuery.param({content:navTarget}), {trigger: true});
+		};
 		
 		init();
 	}

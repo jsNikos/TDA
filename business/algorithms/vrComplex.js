@@ -53,7 +53,7 @@ function VRComplex(){
 
 	/**
 	 * @override
-	 * @param args : {data: object, options: {maxScale: number, maxDim: number}}
+	 * @param args : {data: [[coords]], options: {maxScale: number, maxDim: number}}
 	 */
 	this.start = function(args){
 		args = args || {};

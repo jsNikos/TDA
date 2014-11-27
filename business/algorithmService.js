@@ -1,4 +1,5 @@
 var cp = require('child_process');
+var broadcaster = require('./broadcaster');
 module.exports = new AlgorithmService();
 
 /**
@@ -24,6 +25,7 @@ function AlgorithmService(){
 		algorithm
 		  .on('message', function(msg) {
 			try{				
+				broadcaster.send('algorithm-result', {options: options, algorithm: algorithmName}, msg);
 				onReady(null, msg);
 			}catch(err){
 				console.error(err.stack);				
@@ -33,7 +35,7 @@ function AlgorithmService(){
 			onReady(err);
 		   })
 		  .on('exit', function(){
-			  console.log(__filename + ' simulation child-process exit');
+			  console.log(__filename + ' algorithm child-process exit');
 		  });
 		algorithm.send({method: 'start', data: data, options: options});		
 		

@@ -7,8 +7,8 @@ define(function(){
 	function ChartView(args){
 		
 		// options
-		var chartHeight = 300;
-		var chartWidth = 500;
+		var chartHeight = 600;
+		var chartWidth = 600;
 		
 		var x0, y0, x1, y1; // coord-sys
 		
@@ -17,7 +17,7 @@ define(function(){
 		var chartCtx = $chart.get(0).getContext('2d');
 		
 		function init(){
-			initCoordSys([{x:0,y:0}, {x:1,y:1}]);
+			initCoordSys([{x:-1.5,y:1.5}, {x:1.5,y:-1.5}]);
 			$chart.attr('height', chartHeight)
 				  .attr('width', chartWidth);			
 		}
@@ -55,6 +55,62 @@ define(function(){
 		};
 		
 		/**
+		 * Draws given simplex if dimension <= 2
+		 * @params simplex: {dimension: integer, verticesCoords: [[x,y]] (coordinates)}
+		 */
+		this.drawSimplex = function(simplex){
+			switch (simplex.dimension) {
+			case 0:
+				drawPoints({x: simplex.verticesCoords[0][0], y: simplex.verticesCoords[0][1]});
+				break;
+			case 1:
+				drawLine(simplex.verticesCoords[0], simplex.verticesCoords[1]);
+				break;
+			case 2:
+				drawTriangle(simplex.verticesCoords[0], simplex.verticesCoords[1], simplex.verticesCoords[2]);
+				break;
+			default:
+				break;
+			}
+		};
+		
+		/**
+		 * Draws 2-simplex based on given vertices
+		 */
+		function drawTriangle(v0, v1, v2){
+			chartCtx.beginPath();
+			chartCtx.lineWidth= '0';
+//			chartCtx.strokeStyle= '#cccccc'; 
+			chartCtx.fillStyle="#cccccc";			
+			
+			var chartCoordV0 = toChartCoord({x: v0[0], y: v0[1]});
+			chartCtx.moveTo(chartCoordV0.x, chartCoordV0.y);
+			var chartCoordV1 = toChartCoord({x: v1[0], y: v1[1]});
+			chartCtx.lineTo(chartCoordV1.x, chartCoordV1.y);
+			var chartCoordV2 = toChartCoord({x: v2[0], y: v2[1]});
+			chartCtx.lineTo(chartCoordV2.x, chartCoordV2.y);
+			chartCtx.fill(); 
+			chartCtx.stroke(); 
+		}
+		
+		/**
+		 * Draws a line.
+		 * @params from: [x,y]
+		 * @params to: [x,y]
+		 */
+		function drawLine(from, to){
+			chartCtx.beginPath();
+			chartCtx.lineWidth= '1';
+			chartCtx.strokeStyle= '#888888'; 
+			
+			var chartCoordFrom = toChartCoord({x: from[0], y: from[1]});
+			chartCtx.moveTo(chartCoordFrom.x, chartCoordFrom.y);
+			var chartCoordTo = toChartCoord({x: to[0], y: to[1]});
+			chartCtx.lineTo(chartCoordTo.x , chartCoordTo.y);
+			chartCtx.stroke(); 
+		}
+		
+		/**
 		 * Draws point into canvas.
 		 * @param coords : {x,y} (mathematical coordinates), can be array of coordinates
 		 */
@@ -64,7 +120,11 @@ define(function(){
 			}
 			_.each(coords, function(coord) {
 				var chartCoord = toChartCoord(coord);
-				chartCtx.fillRect(chartCoord.x, chartCoord.y, 1, 1);
+				chartCtx.beginPath();
+				chartCtx.fillStyle="#000000";
+				chartCtx.arc(chartCoord.x, chartCoord.y,1,0,2*Math.PI);
+				chartCtx.fill();
+				chartCtx.stroke();
 			});
 		}
 		

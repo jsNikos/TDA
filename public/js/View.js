@@ -9,8 +9,18 @@ define(['css!index', 'css!animate', 'animojs'], function(){
 		var $content = jQuery('.container.content', $el);
 		
 		function init(){
-			
+			initMenueItems();
 		}	
+		
+		function initMenueItems() {
+			$el.on('click', '#navbar a', function(event) {
+				jQuery('li.active', $el).removeClass('active');
+				var $target = jQuery(event.target);
+				$target.closest('li').addClass('active');
+				controller.handleMenuItemClicked($target.attr('data-role'));				
+				event.preventDefault();
+			});
+		}
 
 		/**
 		 * Shows content based on the given content-controller.

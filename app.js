@@ -62,20 +62,4 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-//TODO test
-//var data = [];
-//var options = {maxScale : 0.5, maxDim: 2};
-//for(var i = 0; i <= 10; i++){
-//	var ran = Math.random();
-//	data.push([Math.cos(2*Math.PI*ran), Math.sin(2*Math.PI*ran)]);
-//}
-//for(var i = 0; i <= 10; i++){
-//	var ran = Math.random();
-//	data.push([0.8*Math.cos(2*Math.PI*ran), 0.8* Math.sin(2*Math.PI*ran)]);
-//}
-//business.algorithmService.start('vrComplex.js', data, options, function(err, result){	
-//	debugger; //TODO
-//	console.log(result.complex);
-//});
-
 module.exports = app;

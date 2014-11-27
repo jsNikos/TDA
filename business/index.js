@@ -1,6 +1,6 @@
 module.exports = {
 		broadcaster :  require('./broadcaster'),
 		 utils : require('./utils'),
-		 simulator: require('./simulator'),
+		 simulationService: require('./simulationService'),
 		 algorithmService: require('./algorithmService')
 };

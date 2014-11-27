@@ -11,6 +11,7 @@ function(SimulationsContentView, BaseContentController, async,
 
 	function SimulationsContentController(args) {
 		var scope = this;
+		var urlPrefix = '/simulations';
 		
 		// models
 		var Result = Backbone.Model.extend({
@@ -57,7 +58,7 @@ function(SimulationsContentView, BaseContentController, async,
 		 * Requests from server to start simulation.
 		 */
 		this.handleStartClicked =function() {
-			jQuery.ajax({url:'/startSimulation',
+			jQuery.ajax({url:urlPrefix+'/start',
 				type: 'POST'
 			});
 		};
@@ -66,7 +67,7 @@ function(SimulationsContentView, BaseContentController, async,
 		 * Requests from server to stop simulation.
 		 */
 		this.handleStopClicked =function() {
-			jQuery.ajax({url:'/stopSimulation',
+			jQuery.ajax({url:urlPrefix+'/stop',
 				type: 'POST'
 			});
 		};	

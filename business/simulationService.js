@@ -1,9 +1,9 @@
 var cp = require('child_process');
 var broadcaster = require('./broadcaster');
 
-module.exports = new Simulator();
+module.exports = new SimulationService();
 
-function Simulator(){
+function SimulationService(){
 	var simulation = undefined; // a forked child-process running a simulation
 
 	/**
