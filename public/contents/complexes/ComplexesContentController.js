@@ -9,26 +9,11 @@ function(ComplexesContentView, BaseContentController, async,
 	};
 	// events
 
-	//TODO implement
 	function ComplexesContentController(args) {
 		var scope = this;
 		var urlPrefix = '/complexes';
 		
-		// models
-		var Result = Backbone.Model.extend({
-			defaults : {
-				x : 0,
-				y : 0,
-				z : 0,
-				n : 0,  // iteration-step
-				color: '#000000',
-				initValueId : 0
-			}
-		});
-		var Results = Backbone.Collection.extend({
-			model: Result
-		});		
-		var results = new Results();
+		// models		
 				
 		this.init = function() {
 			async.series([
@@ -48,6 +33,7 @@ function(ComplexesContentView, BaseContentController, async,
 		 * Handles receiving a algorithm-outcome for creating a complex.
 		 * Triggers view to render outcome.
 		 * 
+		 * This are all server-side definitions.
 		 * Vertex: {id: number, coords: []}
 		 * Simplex: {minScale: number, maxDistance: number, dimension: integer, id: integer, vertices: [vertex-id]} 
 		 * @params args : {channel: string,
@@ -69,7 +55,7 @@ function(ComplexesContentView, BaseContentController, async,
 		this.handleStartClicked =function() {
 			// TODO  some test data - add option to get from file, load from client-db, reference in server-db
 			var data = [];		
-			var iterations = 10;
+			var iterations = 50;
 			for(var i = 0; i <= iterations; i++){
 				var ran = Math.random();
 				data.push([Math.cos(2*Math.PI*ran), Math.sin(2*Math.PI*ran)]);
@@ -78,7 +64,7 @@ function(ComplexesContentView, BaseContentController, async,
 				var ran = Math.random();
 				data.push([0.8*Math.cos(2*Math.PI*ran), 0.8* Math.sin(2*Math.PI*ran)]);
 			}			
-			var request = {algorithm: 'vrComplex.js', data: data, options: {maxScale: 0.5, maxDim: 1}};
+			var request = {algorithm: 'vrComplex.js', data: data, options: {maxScale: 0.5, maxDim: 2}};
 			
 			jQuery.ajax({url: urlPrefix+'/start',
 				type: 'POST',

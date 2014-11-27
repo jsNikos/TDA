@@ -79,8 +79,8 @@ define(function(){
 		 */
 		function drawTriangle(v0, v1, v2){
 			chartCtx.beginPath();
-			chartCtx.lineWidth= '0';
-//			chartCtx.strokeStyle= '#cccccc'; 
+			chartCtx.lineWidth= 1;
+			chartCtx.strokeStyle= '#888888'; 
 			chartCtx.fillStyle="#cccccc";			
 			
 			var chartCoordV0 = toChartCoord({x: v0[0], y: v0[1]});
@@ -100,7 +100,7 @@ define(function(){
 		 */
 		function drawLine(from, to){
 			chartCtx.beginPath();
-			chartCtx.lineWidth= '1';
+			chartCtx.lineWidth= 1;
 			chartCtx.strokeStyle= '#888888'; 
 			
 			var chartCoordFrom = toChartCoord({x: from[0], y: from[1]});

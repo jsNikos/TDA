@@ -89,6 +89,19 @@ function VRComplex(){
 	 * Extracts given dimension from given complex.
 	 * Iterates through simplexes of complex with dimension = dim-1
 	 * and tries to create dim-dimensional simplex w.r.t given scale. 
+	 * 
+	 * The general idea of this algorithm is using the order defined in vertices.
+	 * The algorithm iterates through dimensions in per dimension through vertixes contained in complex already.
+	 * The order enables to proceed like here:
+	 * assume dim=2 is done
+	 * 
+	 * check:
+	 * [1 2] 3    add  [1 2 3]
+	 * [1 2] 4    
+	 * [1 2] 5    add [1 2 5]
+	 * ...
+	 * [5 2] x  we only need to check x > 5, because x < 5 can be ordered to obtained an already checked pair  
+	 * 
 	 * @param complex : [simplex]
 	 * @return [simplex] : dim-dimensional simplexes
 	 */
@@ -135,11 +148,11 @@ function VRComplex(){
 				if(simplex.dimension !== dim-1){
 					return;
 				}
-				_.each(vertices, function(vertex){
-					var newSimplex = checkToCreateSimplex(simplex, vertex, scale, distanceMap);
-					newSimplex && result.push(newSimplex); 
-				});
-				
+				for(var vertexId = Math.max.apply(null, simplex.vertices); vertexId < vertices.length; vertexId++){
+					// checks are ordered, it's enough to check for higher vertex-ordinals
+					var newSimplex = checkToCreateSimplex(simplex, vertices[vertexId], scale, distanceMap);
+					newSimplex && result.push(newSimplex);
+				}				
 			});
 		}		
 
