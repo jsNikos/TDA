@@ -62,4 +62,20 @@ app.use(function(req, res, next) {
     next(err);
 });
 
+
+//TODO test
+//var matrix = [[0,1,1,0], 
+//              [1, 0,1,1],
+//              [1, 0,0,0]];
+
+//var matrix = [[0,1], 
+//              [1, 0],
+//              [1, 0]];
+
+var matrix = [[0,0,0,0], 
+              [0, 0,0,1],
+              [0, 0,0,1]];
+require('./business/algorithms/matrixReductionZ2.js').start({data: matrix});
+
+
 module.exports = app;

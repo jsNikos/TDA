@@ -5,8 +5,6 @@ var _ = require('underscore');
 var Algorithm = require('./Algorithm');
 var sylvester = require('sylvester');
 
-VRComplex.prototype = new Algorithm();
-VRComplex.prototype.constructor = VRComplex;
 module.exports = new VRComplex();
 
 /**
@@ -31,6 +29,9 @@ module.exports = new VRComplex();
  */
 function VRComplex(){
 	var scope = this;
+	// inheritance
+	Algorithm.call(this);
+	
 	var Vertex = function(){
 		this.id; // number
 		this.coords; // [number], the coordinates
@@ -41,19 +42,11 @@ function VRComplex(){
 		this.vertices; // [vertex.id]
 		this.maxDistance = 0; // number, the max-distance between vertices
 		this.dimension = 0; // number
-	};
-		
-	function init(){
-		// register message-listener for this child-process
-		// command: {method: string, data: object, options: object}
-		process.on('message', function(args) {
-			scope[args.method].call(this, args);
-		});	
-	}
+	};	
 
 	/**
 	 * @override
-	 * @param args : {data: [[coords]], options: {maxScale: number, maxDim: number}}
+	 * @param args : {data: [[coords]], options: {maxScale: number, maxDim: number}}	  
 	 */
 	this.start = function(args){
 		args = args || {};
@@ -244,11 +237,7 @@ function VRComplex(){
 	this.stop = function(){
 		console.log(__filename + ' stopping ...');
 		//TODO
-	};
-	
-	
-
-	init();
+	};	
 
 }
 

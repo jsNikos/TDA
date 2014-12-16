@@ -8,6 +8,15 @@ module.exports = Algorithm;
  * Use algorithmService to execute an algorithm.
  */
 function Algorithm(){
+	var scope = this;
+	
+	function init(){
+		// register message-listener for this child-process
+		// command: {method: string, data: object, options: object}
+		process.on('message', function(args) {
+			scope[args.method].call(this, args);
+		});	
+	}
 	
 	/**
 	 * This is called to start computation. 
@@ -32,4 +41,6 @@ function Algorithm(){
 	this.sendResult = function(result){
 		process.send(result); 
 	};
+	
+	init();
 }
