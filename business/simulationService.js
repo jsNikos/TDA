@@ -1,5 +1,5 @@
 var cp = require('child_process');
-var broadcaster = require('./broadcaster');
+var broadcasterService = require('./broadcasterService');
 
 module.exports = new SimulationService();
 
@@ -15,7 +15,7 @@ function SimulationService(){
 		simulation
 		  .on('message', function(msg) {
 			try{								
-				broadcaster.send('simulation-result', null, msg);
+				broadcasterService.send('simulation-result', null, msg);
 			}catch(err){
 				console.error(err.stack);
 			}})

@@ -1,5 +1,5 @@
 var cp = require('child_process');
-var broadcaster = require('./broadcaster');
+var broadcasterService = require('./broadcasterService');
 module.exports = new AlgorithmService();
 
 /**
@@ -10,22 +10,23 @@ function AlgorithmService(){
 	/**
 	 * Forks a new child-process and runs given algorithm on given data and
 	 * returns task.
+	 * This method notifies broadcaster about results from algorithms!
 	 * @param algorithmName: the file-name of the algorithm relative to algorithms-folder
 	 * @param data : []
 	 * @param options: configering the algorithm
 	 * @param onReady: function(err, result)
 	 * @returns task : {stop: function()}
 	 */
-	this.start = function(algorithmName, data, options, onReady){
+	this.startAndBroadcast = function(algorithmName, data, options, onReady){
 		onReady = onReady || function(){};
 //		var	algorithm = require(__dirname + '/algorithms/'+algorithmName); TODO 
 //		algorithm.start({method: 'start', data: data, options: options}); 
-		
+				
 		var	algorithm = cp.fork(__dirname + '/algorithms/'+algorithmName);
 		algorithm
 		  .on('message', function(msg) {
 			try{				
-				broadcaster.send('algorithm-result', {options: options, algorithm: algorithmName}, msg);
+				broadcasterService.send('algorithm-result', {options: options, algorithm: algorithmName}, msg);
 				onReady(null, msg);
 			}catch(err){
 				console.error(err.stack);				
@@ -44,8 +45,5 @@ function AlgorithmService(){
 				algorithm.send({method: 'stop'});
 			}			
 		};
-	};
-	
-	
-	
+	};	
 }

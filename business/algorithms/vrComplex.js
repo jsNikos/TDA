@@ -56,7 +56,9 @@ function VRComplex(){
 		complex = _.sortBy(complex, function(simplex){
 			return simplex.minScale;
 		});
-		scope.sendResult({vertices: vertices, complex: complex});
+		var result = {vertices: vertices, complex: complex};
+		scope.sendResult && scope.sendResult(result);
+		return result;
 	};	
 	
 	/**

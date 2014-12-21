@@ -48,7 +48,7 @@ var wsServer = new WebSocketServer({
 });
 wsServer.on('request', function(request) {
 	try{
-		business.broadcaster.register(request.accept(null, request.origin));
+		business.broadcasterService.register(request.accept(null, request.origin));
 		console.log((new Date()) + ' Connection accepted.');
 	}catch(e){
 		console.error(e.stack);
@@ -63,7 +63,7 @@ app.use(function(req, res, next) {
 });
 
 
-//TODO test
+//TODO test matrix-reduction 
 //var matrix = [[0,1,1,0], 
 //              [1, 0,1,1],
 //              [1, 0,0,0]];
@@ -72,10 +72,32 @@ app.use(function(req, res, next) {
 //              [1, 0],
 //              [1, 0]];
 
-var matrix = [[0,0,0,0], 
-              [0, 0,0,1],
-              [0, 0,0,1]];
-require('./business/algorithms/matrixReductionZ2.js').start({data: matrix});
+//var matrix = [[0,0,0,0], 
+//              [0, 0,0,1],
+//              [0, 0,0,1]];
+//require('./business/algorithms/matrixReductionZ2.js').start({data: matrix});
+
+//TODO test vrComplex
+var _ = require('underscore');
+var data = [];		
+var iterations = 50;
+for(var i = 0; i <= iterations; i++){
+	var ran = Math.random();
+	data.push([Math.cos(2*Math.PI*ran), Math.sin(2*Math.PI*ran)]);
+}
+for(var i = 0; i <= iterations; i++){
+	var ran = Math.random();
+	data.push([0.8*Math.cos(2*Math.PI*ran), 0.8* Math.sin(2*Math.PI*ran)]);
+}			
+var reqBody = {algorithm: 'vrComplex.js', data: data, options: {maxScale: 0.5, maxDim: 2}};
+business.algorithmService.startAndBroadcast(reqBody.algorithm, reqBody.data, reqBody.options, function(err, msg){
+	// filter scale from complex
+	var scale = 0.35;	
+	var simplexes = _.filter(msg.complex, function(simplex){
+		return simplex.minScale <= scale;
+	});
+	business.algorithmService.startAndBroadcast('homologyZ2.js', {vertices: msg.vertices, simplexes: simplexes}, null);	
+});
 
 
 module.exports = app;

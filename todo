@@ -5,6 +5,11 @@ client:
 - results (2 dim and 3 dim) can be displayed (triangulation)
   dim 0: point, 1: line, 2: triangle
   
+ - add mocha.js tests
+  
+ - 2d, 3d triangulation from data-sets: search for improved algorithm (Delenauy?) which produces nice# triangulations
+  which are correctly embeddabe in 2d/3d, also how to triangulate knotes
+  
 - homology: based on given complex compute homology 
 
 - simulation results can be save in client-side db and retrieved via links

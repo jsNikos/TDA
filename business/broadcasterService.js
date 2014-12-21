@@ -1,8 +1,8 @@
 var utils = require('./utils');
 var _ = require('underscore');
-module.exports = new Broadcaster();
+module.exports = new BroadcasterService();
 
-function Broadcaster(){	
+function BroadcasterService(){	
 	var scope = this;
 	var connections = [];
 	

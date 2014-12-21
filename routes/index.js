@@ -13,7 +13,7 @@ router.use(function(req, res, next) {
  * @request: {algorithm: string, options: {maxScale: number, maxDim: integer}, data: []}
  */
 router.post('/complexes/start', function(req, res) {
-	business.algorithmService.start(req.body.algorithm, req.body.data, req.body.options);
+	business.algorithmService.startAndBroadcast(req.body.algorithm, req.body.data, req.body.options);
 	res.status(200).end();
 });
 

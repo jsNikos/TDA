@@ -18,12 +18,15 @@ function MatrixReductionZ2(){
 	
 	/**
 	 * This is called to start computation. 
-	 * @param args : {data : [[]] - the matrix}
+	 * @param args : {data : [rows[columns]] - the matrix}
+	 * @returns: {reduced: [rows[columns]]}  reduced form
 	 * @override
 	 */
 	this.start = function(args){
-		var matrix = new Matrix(args.data);		
-		scope.sendResult({reduced: matrix.reduce().data}); 
+		var matrix = new Matrix(args.data);
+		var result = {reduced: matrix.reduce().data};
+		scope.sendResult &&	scope.sendResult(result);
+		return result;
 	};
 	
 	function Matrix(arr){
