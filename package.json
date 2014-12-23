@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "make test"
   },
   "dependencies": {
     "body-parser": "~1.6.6",
@@ -12,6 +13,7 @@
     "ejs": "~0.8.5",
     "express": "~4.8.6",
     "less-middleware": "1.0.x",
+    "mocha": "^2.1.0",
     "morgan": "~1.2.3",
     "q": "^1.1.2",
     "serve-favicon": "~2.0.1",

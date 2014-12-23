@@ -6,6 +6,8 @@ client:
   dim 0: point, 1: line, 2: triangle
   
  - add mocha.js tests
+   have followed this: https://brianstoner.com/blog/testing-in-nodejs-with-mocha/
+   http://mochajs.org/#running-mochas-tests
   
  - 2d, 3d triangulation from data-sets: search for improved algorithm (Delenauy?) which produces nice# triangulations
   which are correctly embeddabe in 2d/3d, also how to triangulate knotes
