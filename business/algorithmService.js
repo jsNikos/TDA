@@ -8,6 +8,14 @@ module.exports = new AlgorithmService();
 function AlgorithmService(){
 	
 	/**
+	 * Create instance of algorithm given by name.
+	 */
+	this.createAlgorithm = function(algorithmName){
+		var Algorithm = require('./algorithms/'+algorithmName);
+		return new Algorithm();
+	};
+	
+	/**
 	 * Forks a new child-process and runs given algorithm on given data and
 	 * returns task.
 	 * This method notifies broadcaster about results from algorithms!
@@ -19,11 +27,9 @@ function AlgorithmService(){
 	 */
 	this.startAndBroadcast = function(algorithmName, data, options, onReady){
 		onReady = onReady || function(){};
-//		var	algorithm = require(__dirname + '/algorithms/'+algorithmName); TODO 
-//		algorithm.start({method: 'start', data: data, options: options}); 
 				
-		var	algorithm = cp.fork(__dirname + '/algorithms/'+algorithmName);
-		algorithm
+		var	algorithmMediator = cp.fork(__dirname + '/algorithms/AlgorithmMediator.js');
+		algorithmMediator
 		  .on('message', function(msg) {
 			try{				
 				broadcasterService.send('algorithm-result', {options: options, algorithm: algorithmName}, msg);
@@ -38,11 +44,11 @@ function AlgorithmService(){
 		  .on('exit', function(){
 			  console.log(__filename + ' algorithm child-process exit');
 		  });
-		algorithm.send({method: 'start', data: data, options: options});		
+		algorithmMediator.send({algorithm: algorithmName, method: 'start', data: data, options: options});		
 		
 		return {
 			stop: function(){
-				algorithm.send({method: 'stop'});
+				algorithmMediator.send({method: 'stop'});
 			}			
 		};
 	};	

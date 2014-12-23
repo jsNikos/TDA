@@ -35,7 +35,7 @@ app.use(function(err, req, res, next) {
 });
 
 // server
-var server = app.listen(3000, function () {
+var server = app.listen(4000, function () {
 	  var host = server.address().address;
 	  var port = server.address().port;
 	  console.log('app listening at http://%s:%s', host, port);
@@ -75,12 +75,13 @@ app.use(function(req, res, next) {
 //var matrix = [[0,0,0,0], 
 //              [0, 0,0,1],
 //              [0, 0,0,1]];
-//require('./business/algorithms/matrixReductionZ2.js').start({data: matrix});
+//var MatrixReductionZ2 = require('./business/algorithms/MatrixReductionZ2.js');
+//var matrixReductionZ2 = new MatrixReductionZ2().start({data: matrix}).then(console.log);
 
 //TODO test vrComplex
 var _ = require('underscore');
 var data = [];		
-var iterations = 50;
+var iterations = 10;
 for(var i = 0; i <= iterations; i++){
 	var ran = Math.random();
 	data.push([Math.cos(2*Math.PI*ran), Math.sin(2*Math.PI*ran)]);
@@ -89,15 +90,37 @@ for(var i = 0; i <= iterations; i++){
 	var ran = Math.random();
 	data.push([0.8*Math.cos(2*Math.PI*ran), 0.8* Math.sin(2*Math.PI*ran)]);
 }			
-var reqBody = {algorithm: 'vrComplex.js', data: data, options: {maxScale: 0.5, maxDim: 2}};
-business.algorithmService.startAndBroadcast(reqBody.algorithm, reqBody.data, reqBody.options, function(err, msg){
-	// filter scale from complex
-	var scale = 0.35;	
-	var simplexes = _.filter(msg.complex, function(simplex){
-		return simplex.minScale <= scale;
-	});
-	business.algorithmService.startAndBroadcast('homologyZ2.js', {vertices: msg.vertices, simplexes: simplexes}, null);	
-});
+
+business.algorithmService
+		 .createAlgorithm('VRComplex')
+		 .start({data: data, options: {maxScale: 0.5, maxDim: 2}})
+		 .then(function(complex){	
+			 var scale = 0.35;	
+			 var simplexes = _.filter(complex.complex, function(simplex){
+				 return simplex.minScale <= scale;
+			 });
+			 
+			 business.algorithmService
+			 	.createAlgorithm('HomologyZ2')
+			 	.start({data: {vertices: complex.vertices, simplexes: simplexes}})
+			 	.then(console.log)
+			 	.done(null, function(err){	
+			 		console.log(err.stack);
+			 	});
+		 
+		 }).done(null, function(err){	
+			 console.log(err.stack);
+		 });
+
+//var reqBody = {algorithm: 'VRComplex.js', data: data, options: {maxScale: 0.5, maxDim: 2}};
+//business.algorithmService.startAndBroadcast(reqBody.algorithm, reqBody.data, reqBody.options, function(err, msg){
+//	// filter scale from complex
+//	var scale = 0.35;	
+//	var simplexes = _.filter(msg.complex, function(simplex){
+//		return simplex.minScale <= scale;
+//	});
+//	business.algorithmService.startAndBroadcast('HomologyZ2.js', {vertices: msg.vertices, simplexes: simplexes}, null);	
+//});
 
 
 module.exports = app;

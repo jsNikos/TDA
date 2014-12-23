@@ -2,9 +2,10 @@
  * Runs as forked child-process
  */
 var _ = require('underscore');
+var q = require('q');
 var Algorithm = require('./Algorithm');
 
-module.exports = new MatrixReductionZ2();
+module.exports = MatrixReductionZ2;
 
 /**
  * This algorithm is intended to reduce a matrix over the field Z/2Z into Smith normal form
@@ -19,14 +20,14 @@ function MatrixReductionZ2(){
 	/**
 	 * This is called to start computation. 
 	 * @param args : {data : [rows[columns]] - the matrix}
-	 * @returns: {reduced: [rows[columns]]}  reduced form
+	 * @returns: promise with result: {reduced: [rows[columns]]}  reduced form
 	 * @override
 	 */
 	this.start = function(args){
-		var matrix = new Matrix(args.data);
-		var result = {reduced: matrix.reduce().data};
-		scope.sendResult &&	scope.sendResult(result);
-		return result;
+		return q.Promise(function(resolve, reject, notify) {
+			var matrix = new Matrix(args.data);
+			resolve({reduced: matrix.reduce().data});			
+		});
 	};
 	
 	function Matrix(arr){

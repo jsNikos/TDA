@@ -64,7 +64,7 @@ function(ComplexesContentView, BaseContentController, async,
 				var ran = Math.random();
 				data.push([0.8*Math.cos(2*Math.PI*ran), 0.8* Math.sin(2*Math.PI*ran)]);
 			}			
-			var request = {algorithm: 'vrComplex.js', data: data, options: {maxScale: 0.5, maxDim: 2}};
+			var request = {algorithm: 'VRComplex.js', data: data, options: {maxScale: 0.5, maxDim: 2}};
 			
 			jQuery.ajax({url: urlPrefix+'/start',
 				type: 'POST',

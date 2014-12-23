@@ -1,11 +1,9 @@
-/**
- * Runs as forked child-process
- */
+var q = require('q');
 var _ = require('underscore');
 var Algorithm = require('./Algorithm');
 var sylvester = require('sylvester');
 
-module.exports = new VRComplex();
+module.exports = VRComplex;
 
 /**
  * When finishes normally, sends message to parent-process with result as data.
@@ -46,19 +44,20 @@ function VRComplex(){
 
 	/**
 	 * @override
-	 * @param args : {data: [[coords]], options: {maxScale: number, maxDim: number}}	  
+	 * @param args : {data: [[coords]], options: {maxScale: number, maxDim: number}}
+	 * @returns: Promise with result {vertices: vertices, complex: complex}
 	 */
 	this.start = function(args){
 		args = args || {};
 		console.log(__filename + ' starting ...');	
-		var vertices = createVertices(args.data);
-		var complex = createComplex(args.options, vertices);
-		complex = _.sortBy(complex, function(simplex){
-			return simplex.minScale;
+		return q.Promise(function(resolve, reject, notify) {
+			var vertices = createVertices(args.data);
+			var complex = createComplex(args.options, vertices);
+			complex = _.sortBy(complex, function(simplex){
+				return simplex.minScale;
+			});
+			resolve({vertices: vertices, complex: complex});			
 		});
-		var result = {vertices: vertices, complex: complex};
-		scope.sendResult && scope.sendResult(result);
-		return result;
 	};	
 	
 	/**

@@ -12,6 +12,22 @@ client:
   
 - homology: based on given complex compute homology 
 
+- general aims: ability to add algorithms at runtime, implements system as npm-module
+and create default-algorithm which can be extended and added as option to the system
+  the same for simulations
+- algorithm and simulation should be able to be implemented to run in separate app
+  for instance C or R, write some examples for this
+- simulate, analyse topology, learn parameter, save results, locally/server
+  reuse results, portable, mobile, printable for papers
+- source and result data can be uploaded to db from file, or on the fly via json,
+  store on client, placing directly on server
+- downloadable from db via stream to resp.
+- all data always have JSON-format
+- implement view to manager data sources
+
+- simulations reqwrite in same manner as algorithms, make runnable in child-process or standalone
+  and returning a Promise, use the same Mediator-pattern like for algorithms.
+
 - simulation results can be save in client-side db and retrieved via links
 - thus one can always proceed where one finished
 
