@@ -31,10 +31,10 @@ function HomologyZ2(){
 		return q.Promise(function(resolve, reject, notify) {
 			var betty = [];							
 			utils.execTasks(createDimensionIterator(betty, args.data))
-				.then(function(){
+				 .then(function(){
 					resolve(betty);	
-				})
-				.done(null, reject);
+				 })
+				 .done(null, reject);
 			
 			
 			//TODO test some bug, homology is negative!!

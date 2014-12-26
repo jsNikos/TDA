@@ -22,8 +22,6 @@ module.exports = VRComplex;
  * The max-distance is saved as a property with the so constructed simplex and thus one can reproduce
  * the complex at any scale below max-scale by just selecting those which have max-distance below the
  * scale.
- * 
- * //TODO an alternative using in memory-db would be good to
  */
 function VRComplex(){
 	var scope = this;

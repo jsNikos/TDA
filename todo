@@ -14,6 +14,8 @@ client:
   
 - homology: based on given complex compute homology 
 
+- implement the 'stop'-methods in Algorithm.js
+
 - general aims: ability to add algorithms at runtime, implements system as npm-module
 and create default-algorithm which can be extended and added as option to the system
   the same for simulations

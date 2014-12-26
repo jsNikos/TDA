@@ -63,20 +63,6 @@ app.use(function(req, res, next) {
 });
 
 
-//TODO test matrix-reduction 
-//var matrix = [[0,1,1,0], 
-//              [1, 0,1,1],
-//              [1, 0,0,0]];
-
-//var matrix = [[0,1], 
-//              [1, 0],
-//              [1, 0]];
-
-//var matrix = [[0,0,0,0], 
-//              [0, 0,0,1],
-//              [0, 0,0,1]];
-//var MatrixReductionZ2 = require('./business/algorithms/MatrixReductionZ2.js');
-//var matrixReductionZ2 = new MatrixReductionZ2().start({data: matrix}).then(console.log);
 
 //TODO test vrComplex
 var _ = require('underscore');
@@ -111,16 +97,5 @@ business.algorithmService
 		 }).done(null, function(err){	
 			 console.log(err.stack);
 		 });
-
-//var reqBody = {algorithm: 'VRComplex.js', data: data, options: {maxScale: 0.5, maxDim: 2}};
-//business.algorithmService.startAndBroadcast(reqBody.algorithm, reqBody.data, reqBody.options, function(err, msg){
-//	// filter scale from complex
-//	var scale = 0.35;	
-//	var simplexes = _.filter(msg.complex, function(simplex){
-//		return simplex.minScale <= scale;
-//	});
-//	business.algorithmService.startAndBroadcast('HomologyZ2.js', {vertices: msg.vertices, simplexes: simplexes}, null);	
-//});
-
 
 module.exports = app;
