@@ -12,10 +12,10 @@ module.exports = MatrixReductionZ2;
  * (only 1 on a initial part of the diagonal).
  * It is used typically to compute the homology of a complex.
  */
-function MatrixReductionZ2(){
+function MatrixReductionZ2(args){
 	var scope = this;
 	// inheritance
-	Algorithm.call(this);
+	Algorithm.call(this, args);
 	
 	/**
 	 * This is called to start computation. 

@@ -15,15 +15,15 @@ module.exports = HomologyZ2;
  * Another very essential easy resulting from it, is that it is not necessary to consider orientation of
  * the simplexes at all.
  */
-function HomologyZ2(){
+function HomologyZ2(args){
 	var scope = this;
 	// inheritance
-	Algorithm.call(this);
+	Algorithm.call(this, args);
 	
 	/**
 	 * complex:{vertices: [vertex], simplexes: [simplex]}
 	 * vertex: {id: number, coord: [number]}
-	 * simplex: {id: number, vertices: [vertex.id], dimension: number}
+	 * simplex: {vertices: [vertex.id], dimension: number}
 	 * @param: args: {data: complex}
 	 * @returns: Promise with result: [number (betty-number)] betty-numbers ordered by homology-dimension.
 	 */
@@ -34,18 +34,7 @@ function HomologyZ2(){
 				 .then(function(){
 					resolve(betty);	
 				 })
-				 .done(null, reject);
-			
-			
-			//TODO test some bug, homology is negative!!
-//			var simplexes = [{dimension:2, vertices:[1,2,3]},
-//			                 {dimension:2, vertices:[2,3,4]}];
-//			console.log(createBoundaryMatrix(2, simplexes));
-//			var simplexes = [{dimension:0, vertices:[1]},
-//            {dimension:0, vertices:[2]}];
-//console.log(createBoundaryMatrix(0, simplexes));
-			
-					
+				 .done(null, reject);					
 		});
 	};	
 	
@@ -76,9 +65,11 @@ function HomologyZ2(){
 				}
 				
 				// dim > 0
-				var boundaryMatrix = createBoundaryMatrix(dim, complex.simplexes);			
+				var boundaryMatrix = createBoundaryMatrix(dim, complex.simplexes);	
+				scope.log('reducing boundary-matrix ...');
 				matrixReductionZ2.start({data: boundaryMatrix})
 								 .then(function(result){
+									 scope.log('done.');
 									 var rangeKernel = extractRangeKernelDim(result.reduced);
 									 betty.unshift(rangeKernel.kernel - range);
 									 range = rangeKernel.range;
@@ -98,10 +89,10 @@ function HomologyZ2(){
 	 */
 	function extractRangeKernelDim(reducedMatrix){
 		var range = 0;
-		while(range < reducedMatrix.length && reducedMatrix[range][range] !== 0){
+		while(range < reducedMatrix.length && reducedMatrix[range][range] === 1){
 			range++;
 		}
-		return {range: range, kernel: reducedMatrix.length - range};
+		return {range: range, kernel: reducedMatrix[0].length - range};
 	}
 	
 	/**

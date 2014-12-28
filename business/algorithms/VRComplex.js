@@ -23,10 +23,10 @@ module.exports = VRComplex;
  * the complex at any scale below max-scale by just selecting those which have max-distance below the
  * scale.
  */
-function VRComplex(){
+function VRComplex(args){
 	var scope = this;
 	// inheritance
-	Algorithm.call(this);
+	Algorithm.call(this, args);
 	
 	var Vertex = function(){
 		this.id; // number

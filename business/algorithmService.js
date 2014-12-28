@@ -9,10 +9,11 @@ function AlgorithmService(){
 	
 	/**
 	 * Create instance of algorithm given by name.
+	 * @param args : args applied on algorithm
 	 */
-	this.createAlgorithm = function(algorithmName){
+	this.createAlgorithm = function(algorithmName, args){
 		var Algorithm = require('./algorithms/'+algorithmName);
-		return new Algorithm();
+		return new Algorithm(args);
 	};
 	
 	/**

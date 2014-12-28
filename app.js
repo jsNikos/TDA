@@ -77,6 +77,7 @@ for(var i = 0; i <= iterations; i++){
 	data.push([0.8*Math.cos(2*Math.PI*ran), 0.8* Math.sin(2*Math.PI*ran)]);
 }			
 
+//TODO homology negative!!
 business.algorithmService
 		 .createAlgorithm('VRComplex')
 		 .start({data: data, options: {maxScale: 0.5, maxDim: 2}})
@@ -87,7 +88,7 @@ business.algorithmService
 			 });
 			 
 			 business.algorithmService
-			 	.createAlgorithm('HomologyZ2')
+			 	.createAlgorithm('HomologyZ2', {options: {logging: true}})
 			 	.start({data: {vertices: complex.vertices, simplexes: simplexes}})
 			 	.then(console.log)
 			 	.done(null, function(err){	

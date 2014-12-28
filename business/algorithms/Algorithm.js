@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 module.exports = Algorithm;
 
 /**
@@ -7,9 +9,22 @@ module.exports = Algorithm;
  * Implement this in order to obtain an fully recognized algorithm.
  * In general algorithm are intended to compute something on given data and to return a result. 
  * Use algorithmService to execute an algorithm forked in a new child-process.
+ * @param args: {options : object}
  */
-function Algorithm(){
-	var scope = this;	
+function Algorithm(args){
+	args = args || {options: undefined};	
+	var scope = this;
+	
+	this.options = {logging: undefined /*if true, alogrithm writes logs*/ };
+	_.extend(this.options, args.options);
+	
+	/**
+	 * Logs msg if option is 'logging' in this instance.
+	 * @param msg
+	 */
+	this.log = function(msg){
+		this.options.logging && console.log(msg);
+	};
 	
 	/**
 	 * This is called to start computation. 

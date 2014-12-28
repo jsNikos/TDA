@@ -5,6 +5,13 @@ client:
 - results (2 dim and 3 dim) can be displayed (triangulation)
   dim 0: point, 1: line, 2: triangle
   
+- make it what gimp is for pictures to be for data
+  having result sets from simulation, algorithms, ... there 
+  should exists a view which lets put together steps applied on data in
+  a activity-diagram (drag&drop on the fly)
+  
+- a view which logs currently running tasks and which let interrupt them 
+  
  - add mocha.js tests
    have followed this: https://brianstoner.com/blog/testing-in-nodejs-with-mocha/
    http://mochajs.org/#running-mochas-tests
