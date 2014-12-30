@@ -47,7 +47,7 @@ function VRComplex(args){
 	 */
 	this.start = function(args){
 		args = args || {};
-		console.log(__filename + ' starting ...');	
+		scope.log(__filename + ' starting ...');	
 		return q.Promise(function(resolve, reject, notify) {
 			var vertices = createVertices(args.data);
 			var complex = createComplex(args.options, vertices);
@@ -117,10 +117,10 @@ function VRComplex(args){
 		}
 		
 		function createDim1(){
-			// get from distanceMap
-			for(var id1 in distanceMap.map){
+			// get from distanceMap			
+			_.chain(distanceMap.map).keys().each(function(id1){
 				id1 = parseInt(id1);
-				for(id2 in distanceMap.map[id1]){
+				_.chain(distanceMap.map[id1]).keys().each(function(id2){
 					id2 = parseInt(id2);
 					var distance = distanceMap.map[id1][id2];
 					if(distance <= scale){
@@ -130,10 +130,10 @@ function VRComplex(args){
 							maxDistance : distance,
 							dimension : 1
 						}));
-					}					
-				}
-			}
-		}
+					}		
+				});
+			});
+		}		
 		
 		function createDim(){
 			_.each(complex, function(simplex){
@@ -156,14 +156,16 @@ function VRComplex(args){
 	 * from complex in given scale.
 	 * The criterion is that all distances between vertices keep lower than 'scale' and
 	 * that given vertex is not already contained.
-	 * @return simplex or null
+	 * @param simplex : the simplex to check to add
+	 * @param vertex : the vertex to check to add to the simplex
+	 * @return simplex or null	  
 	 */
 	function checkToCreateSimplex(simplex, vertex, scale, distanceMap){
 		if(_.contains(simplex.vertices, vertex.id)){
 			return null;
 		}
 		
-		var maxDistance = 0;
+		var maxDistance = simplex.maxDistance; 
 		for(var idx = 0; idx < simplex.vertices.length; idx++){
 			maxDistance = Math.max(maxDistance, distanceMap(vertex.id, simplex.vertices[idx]));
 			if(maxDistance > scale){

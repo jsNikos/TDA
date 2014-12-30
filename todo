@@ -1,10 +1,19 @@
 client:
 
+- read in Hutcher about homology with coefficients
+
 - complexes is based on a VR-complex, data can either be uploaded or obtained from a simulation
 - results can be stored in client-side db and retrieved via link
 - results (2 dim and 3 dim) can be displayed (triangulation)
   dim 0: point, 1: line, 2: triangle
   
+- persistence homology + zigzag all which is in the tda-paper
+- compare results with R, use this to run R from node and to provide standard
+  way to implement algorithm which consumes R
+
+- implement for knotes (fundamental group and read about)
+- look into books of Edelbrunner and Kacinsky to get ideas
+
 - make it what gimp is for pictures to be for data
   having result sets from simulation, algorithms, ... there 
   should exists a view which lets put together steps applied on data in

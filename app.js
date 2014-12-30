@@ -66,8 +66,9 @@ app.use(function(req, res, next) {
 
 //TODO test vrComplex
 var _ = require('underscore');
+var util = require('util');
 var data = [];		
-var iterations = 10;
+var iterations = 50;
 for(var i = 0; i <= iterations; i++){
 	var ran = Math.random();
 	data.push([Math.cos(2*Math.PI*ran), Math.sin(2*Math.PI*ran)]);
@@ -77,15 +78,30 @@ for(var i = 0; i <= iterations; i++){
 	data.push([0.8*Math.cos(2*Math.PI*ran), 0.8* Math.sin(2*Math.PI*ran)]);
 }			
 
-//TODO homology negative!!
+//var data = [ [ -0.5175041179041555, -0.8556807161273661 ],
+//             [ -0.995387600888516, 0.09593499881380321 ],
+//             [ 0.5588207847098031, -0.8292884483557695 ],
+//             [ 0.9780994444576069, 0.20813811941045499 ],
+//             [ 0.8371806285065324, -0.5469264989497286 ],
+//             [ 0.255598822525377, 0.9667829342327268 ],
+//             [ -0.6194790484320664, -0.5062071794766463 ],
+//             [ -0.6292971958412463, 0.49394841765749603 ],
+//             [ -0.6656693731692782, 0.4437164473224092 ],
+//             [ 0.12787853883984596, -0.7897132893045337 ],
+//             [ -0.4482989917359461, -0.6625918909921357 ],
+//             [ 0.12588836773079787, 0.7900329859379768 ] ];
+
+//TODO homology negative!! the 1-simplex [0, 6] is missing!
 business.algorithmService
-		 .createAlgorithm('VRComplex')
+		 .createAlgorithm('VRComplex', {options: {logging: true}})
 		 .start({data: data, options: {maxScale: 0.5, maxDim: 2}})
-		 .then(function(complex){	
-			 var scale = 0.35;	
+		 .then(function(complex){
+//			 console.log(util.inspect(complex, {depth: null})); //TODO the min-scale of [0,6] is bigger than of [0, 6, 10] !!! error!
+			 var scale = 0.35;			 
 			 var simplexes = _.filter(complex.complex, function(simplex){
 				 return simplex.minScale <= scale;
-			 });
+			 });			 
+//			 console.log(util.inspect({vertices: complex.vertices, simplexes: simplexes}, {depth:null}));
 			 
 			 business.algorithmService
 			 	.createAlgorithm('HomologyZ2', {options: {logging: true}})
