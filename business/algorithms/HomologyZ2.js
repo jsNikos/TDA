@@ -78,7 +78,7 @@ function HomologyZ2(args){
 								 })
 								 .done(null, reject);					
 			});
-		}
+		};
 	}
 	
 	/**
@@ -141,14 +141,6 @@ function HomologyZ2(args){
 		return	_.max(simplexes, function(simplex){
 			return simplex.dimension;
 		}).dimension;
-	}
-		
-	
-	/**
-	 * This is called in order to stop a running algorithm.
-	 */
-	this.stop = function(){
-		throw new Error('this is abstract');
-	};
+	}	
 	
 }
