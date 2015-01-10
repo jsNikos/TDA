@@ -71,7 +71,7 @@ function PersistenceHomologyZ2(args){
 			var complex = JSON.parse(JSON.stringify(args.data));			
 			complex.simplexes.sort(sortCriterium);	
 			createIdAndIndex(complex.simplexes);
-			var matrixReduction = MatrixReductionZ2();
+			var matrixReduction = new MatrixReductionZ2();
 			var reducedMatrix =	matrixReduction.start({data: createBoundaryMatrix(complex.simplexes)});
 			
 			
