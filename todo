@@ -2,6 +2,11 @@ client:
 
 - read in Hutcher about homology with coefficients
 
+- the power of this app is to have a unique front-end which combines
+  algorithms from different source together (java, c, R), moreover it
+  is backed by a real db at server-side and users can generate algorithm
+  on the fly which also can be publicaly available
+
 - complexes is based on a VR-complex, data can either be uploaded or obtained from a simulation
 - results can be stored in client-side db and retrieved via link
 - results (2 dim and 3 dim) can be displayed (triangulation)
@@ -10,6 +15,16 @@ client:
 - persistence homology + zigzag all which is in the tda-paper
 - compare results with R, use this to run R from node and to provide standard
   way to implement algorithm which consumes R
+  
+ - call methods (vr-complex, persistence homology) from javaPlex
+ 
+ - adavantage, this lets combine algorithms from javaPlex or or other liberies
+   very simple, only needs to implement the adapter scripts (this can be done on
+   the fly and even storeable, with tests in db)
+   That is, db hosts algorithm (adapters, tests) which can be reused and moreover
+   bundeld in mocha test runs.
+   If algorithm become standard they can be hard-coded on server.
+   Algorithm on db can be flagged to be publicly available or restricted to user
 
 - implement for knotes (fundamental group and read about)
 - look into books of Edelbrunner and Kacinsky to get ideas
