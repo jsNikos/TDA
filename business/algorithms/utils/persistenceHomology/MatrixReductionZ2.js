@@ -1,44 +1,55 @@
-/**
- * Runs as forked child-process
- */
+
 var _ = require('underscore');
-var q = require('q');
-var Algorithm = require('./Algorithm');
 
 module.exports = MatrixReductionZ2;
 
 /**
- * This algorithm is intended to reduce a matrix over the field Z/2Z into Smith normal form
- * (only 1 on a initial part of the diagonal).
- * It is used typically to compute the homology of a complex.
+ * Implements the reduction algorithm used for PersistenceHomologZ2.
+ * For detailed description see the comment there.
  */
 function MatrixReductionZ2(args){
-	var scope = this;
-	// inheritance
-	Algorithm.call(this, args);
+	var scope = this;	
 	
 	/**
 	 * This is called to start computation. 
+	 * @param args: {data : [rows[columns]] - the boundary-matrix}
+	 *   			Note, the matrix may be in sparse form, that is rows with only zero must not appear
+	 *              and entries with 0 can be undefined. BUT, the indices must be correct! The matrix
+	 *              could look like this:
+	 *              [0] -> undefined
+	 *              [1][0] -> 1
+	 *              [1][1] -> undefined
+	 *              [3][2] -> 0
 	 * @param args : {data : [rows[columns]] - the matrix}
-	 * @returns: promise with result: {reduced: [rows[columns]]}  reduced form
+	 * @returns: [rows[columns]]  reduced form, note: this again is sparse
 	 * @override
 	 */
-	this.start = function(args){
-		return q.Promise(function(resolve, reject, notify) {
+	this.start = function(args){		
 			var matrix = new Matrix(args.data);
-			resolve({reduced: matrix.reduce().data});			
-		});
+			return matrix.reduce().data;	
 	};
 	
 	function Matrix(arr){
-		var scope = this;
+		var scope = this; // the matrix
 		this.data = undefined;
+		this.size = undefined; // the matrix dimension
 		
 		// inheritance
 		ReductionOperations.call(this);
 		
 		function init(){
 			scope.data = JSON.parse(JSON.stringify(arr));
+			computeSize();
+		}
+		
+		function computeSize(){
+			scope.size = 0;
+			for(var row in scope.data){
+				scope.size = Math.max(scope.size, parseInt(row) + 1);
+				for(var col in scope.data[row]){
+					scope.size = Math.max(scope.size, parseInt(col) + 1);
+				}
+			}
 		}
 		
 		init();
@@ -54,18 +65,28 @@ function MatrixReductionZ2(args){
 		MatrixOperations.call(this);
 		
 		/**
-		 * Applies reduction on this matrix for given level (index of diagonal element).
+		 * Applies reduction on this matrix by column operations (only additions) from left to right.
 		 * @param level : if not given starts from 0
 		 */
-		this.reduce = function(level){
-			level = level || 0;
-			if(!this.ensureOneInDiagonalLevel(level)){
-				return this; // done
+		this.reduce = function(){
+			for(var col = 0; col < this.size; col++){
+				var col0 = -1;
+				while((col0 = findColSameLowestOne(col)) > -1){
+					this.addToCol(col0, col);
+				}
 			}			
-			this.reduceRows(level)
-				.reduceColumns(level);		
-			return (this.existsDiagonalEl(level+1)) ? this.reduce(level+1) : this;
+			return this;
 		};
+		
+		/**
+		 * @returns a column which is before col and has low(col0) = low(col), low
+		 * is the position of lowest one (highest row index with 1), if not exists
+		 * returns -1
+		 */
+		function findColSameLowestOne(col){
+			//TODO implement
+			return -1;
+		}
 		
 		/**
 		 * Reduces rows up from given diagonal level by adding columns.
@@ -150,6 +171,8 @@ function MatrixReductionZ2(args){
 		 * Adds sourceCol to targetCol and writes result into targetCol.
 		 */
 		this.addToCol = function(sourceCol, targetCol){
+			//TODO treat undefined
+			
 			for(var row = 0; row < this.data.length; row++){
 				this.data[row][targetCol] = add(this.data[row][sourceCol], this.data[row][targetCol]);
 			}

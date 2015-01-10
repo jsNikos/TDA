@@ -42,6 +42,7 @@ function VRComplex(args){
 
 	/**
 	 * @override
+	 * complex : [simplex]
 	 * @param args : {data: [[coords]], options: {maxScale: number, maxDim: number}}
 	 * @returns: Promise with result {vertices: vertices, complex: complex}
 	 */
@@ -230,15 +231,7 @@ function VRComplex(args){
 			var vertex = new Vertex();			
 			return _.extend(vertex, {id: idx, coords: elem});
 		});
-	}
-
-	/**
-	 * @override
-	 */
-	this.stop = function(){
-		console.log(__filename + ' stopping ...');
-		//TODO
-	};	
+	}	
 
 }
 
