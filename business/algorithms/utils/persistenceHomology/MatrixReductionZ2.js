@@ -8,7 +8,6 @@ module.exports = MatrixReductionZ2;
  * For detailed description see the comment there.
  */
 function MatrixReductionZ2(args){
-	var scope = this;	
 	
 	/**
 	 * This is called to start computation. 
@@ -38,7 +37,7 @@ function MatrixReductionZ2(args){
 		ReductionOperations.call(this);
 		
 		function init(){
-			scope.data = JSON.parse(JSON.stringify(arr));
+			scope.data = sparseCopy(arr);
 			computeSize();
 		}
 		
@@ -52,15 +51,34 @@ function MatrixReductionZ2(args){
 			}
 		}
 		
+		/**
+		 * Copies given array sparsely.
+		 * @param data : [row[column]]
+		 * @returns : a copy
+		 */
+		function sparseCopy(data){
+			var copy = [];
+			for(var row in data){
+				if(!copy[row]){
+					copy[row] = [];
+				}
+				for(var col in data[row]){
+					copy[row][col] = data[row][col];
+				}
+			}
+			return copy;
+		}
+		
 		init();
-	}
-	
+	}	
 	
 	/**
 	 * Defines operations in order to reduce matrix.
 	 * @extends MatrixOperations
 	 */
 	function ReductionOperations(){
+		var scope = this;
+		
 		// inheritance
 		MatrixOperations.call(this);
 		
@@ -71,7 +89,7 @@ function MatrixReductionZ2(args){
 		this.reduce = function(){
 			for(var col = 0; col < this.size; col++){
 				var col0 = -1;
-				while((col0 = findColSameLowestOne(col)) > -1){
+				while((col0 = findColSameLowestOne(col)) > -1){	
 					this.addToCol(col0, col);
 				}
 			}			
@@ -79,58 +97,40 @@ function MatrixReductionZ2(args){
 		};
 		
 		/**
+		 * @param col : integer
 		 * @returns a column which is before col and has low(col0) = low(col), low
 		 * is the position of lowest one (highest row index with 1), if not exists
 		 * returns -1
 		 */
 		function findColSameLowestOne(col){
-			//TODO implement
+			var lowestOne = findLowestOne(col);
+			if(lowestOne === -1){
+				return -1;
+			}
+			for(var col0 = 0; col0 < col; col0++){
+				if(findLowestOne(col0) === lowestOne){
+					return col0;
+				}						
+			}			
 			return -1;
 		}
 		
-		/**
-		 * Reduces rows up from given diagonal level by adding columns.
+		/**		  
+		 * For given col-index search for a one which has highest row-index in this column.
+		 * Returns -1 if not exist a one at all.
+		 * @param col: integer
+		 * @returns integer
 		 */
-		this.reduceRows = function(level){
-			for(var col = level+1; col < this.data[level].length; col++){
-				if(this.data[level][col] !== 0){
-					this.addToCol(level, col);
-				}
-			}					
-			return this;
-		};
-		
-		/**
-		 * Reduces columns up from given diagonal level by adding rows.
-		 */
-		this.reduceColumns = function(level){
-			for(var row = level+1; row < this.data.length; row++){
-				if(this.data[row][level] !== 0){
-					this.addToRow(level, row);
+		function findLowestOne(col){
+			var result = -1;
+			for(var row in scope.data){
+				if(scope.data[parseInt(row)][col] === 1){
+					result = Math.max(result, row);
 				}
 			}
-			return this;
-		};		
+			return result;
+		};	
 		
-		/** Up from given diagonal level tries to find a 1 and then exchanges rows/cols
-		 *  in order to have the 1 in this diagonal level
-		 *  @return boolean
-		 */
-		this.ensureOneInDiagonalLevel = function(level){
-			if(this.data[level][level] === 1){
-				return true;
-			}
-			for(var row = level; row < this.data.length; row++){
-				for(var col = level; col < this.data[row].length; col++){
-					if(this.data[row][col] === 1){
-						this.exchangeRows(level, row);
-						this.exchangeCols(level, col);
-						return true;
-					}
-				}
-			}			
-			return false;
-		};
 	}
 	
 	/**
@@ -139,61 +139,28 @@ function MatrixReductionZ2(args){
 	 */
 	function MatrixOperations(){		
 		/**
-		 * Checks if diagonal element in given level exists.
-		 */
-		this.existsDiagonalEl = function(level){
-			return this.data[level] != undefined && this.data[level][level] != undefined;
-		};
-		
-		/**
-		 * Exhanges columns by index.
-		 */
-		this.exchangeCols = function(i,k){
-			for(var row = 0; row < this.data.length; row++){
-				var first = this.data[row][i];
-				this.data[row][i] = this.data[row][k];
-				this.data[row][k] = first;
-			}		
-			return this;
-		};
-		
-		/**
-		 * Exhanges rows by index.
-		 */
-		this.exchangeRows = function(i,k){			
-			var first = this.data[i];			
-			this.data[i] = this.data[k];
-			this.data[k] = first;
-			return this;
-		};
-		
-		/**
 		 * Adds sourceCol to targetCol and writes result into targetCol.
 		 */
-		this.addToCol = function(sourceCol, targetCol){
-			//TODO treat undefined
-			
-			for(var row = 0; row < this.data.length; row++){
-				this.data[row][targetCol] = add(this.data[row][sourceCol], this.data[row][targetCol]);
+		this.addToCol = function(sourceCol, targetCol){						
+			for(var row in this.data){
+				var result = add(this.data[row][sourceCol], this.data[row][targetCol]);				
+				if(result){
+					this.data[row][targetCol] = result;
+				} else if(this.data[row][targetCol]) {
+					delete this.data[row][targetCol];
+				}			
 			}
 			return this;
-		};
+		};		
 		
 		/**
-		 * Adds sourceRow to targetRow and writes result into targetRow.
-		 */
-		this.addToRow = function(sourceRow, targetRow){
-			for(var col = 0; col < this.data[sourceRow].length; col++){
-				this.data[targetRow][col] = add(this.data[targetRow][col], this.data[sourceRow][col]);
-			}
-			return this;
-		};
-		
-		/**
+		 * This method translates values which valuates to undefined to 0.
 		 * adds a and b in Z/2Z
 		 */
 		function add(a, b){
-			return a == b ? 0 : (b > a ? b : a);
+			var _a = a == undefined ? 0 : a;
+			var _b = b == undefined ? 0 : b;
+			return _a == _b ? 0 : (_b > _a ? _b : _a);
 		}
 	}		
 	
