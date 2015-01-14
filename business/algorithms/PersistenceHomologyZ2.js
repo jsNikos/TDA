@@ -61,8 +61,8 @@ function PersistenceHomologyZ2(args){
 	 * simplex: {vertices: [vertex.id], dimension: number, filterLevel: integer}
 	 * 
 	 * @param: args: {data: complex}	 
-	 * @returns: Promise with result: [bettyDiagram] 
-	 * bettyDiagram : {dimension: number, [bettyInterval] }
+	 * @returns: Promise with result: {boundaryMatrix: [row[column]], bettyDiagrams : {dimension -> bettyDiagram}} 
+	 * bettyDiagram : [bettyInterval]
 	 * bettyInterval: {start: filterLevel, end: filterLevel/undefined}
 	 */
 	this.start = function(args){
@@ -71,22 +71,64 @@ function PersistenceHomologyZ2(args){
 			var complex = JSON.parse(JSON.stringify(args.data));			
 			complex.simplexes.sort(sortCriterium);	
 			createIdAndIndex(complex.simplexes);
+			
+			var boundaryMatrix = createBoundaryMatrix(complex.simplexes);			
 			var matrixReduction = new MatrixReductionZ2();
-			var reducedMatrix =	matrixReduction.start({data: createBoundaryMatrix(complex.simplexes)});
+			var reducedMatrix =	matrixReduction.start({data: boundaryMatrix});			
+			var bettyDiagrams = createBettiDiagram(reducedMatrix, complex.simplexes);
 			
-			
-			var boundaryMatrix = createBoundaryMatrix(complex.simplexes);
-			resolve({matrix: boundaryMatrix, simplexes: complex.simplexes}); //TODO
-			
-			//TODO take care of 0-dim cycles the are not contained in matrix but the destroyer if any
-//			var betty = [];							
-//			utils.execTasks(createDimensionIterator(betty, args.data))
-//				 .then(function(){
-//					resolve(betty);	
-//				 })
-//				 .done(null, reject);					
-		});
+			resolve({boundaryMatrix: boundaryMatrix, bettyDiagrams: bettyDiagrams}); 
+		});		
 	};	
+	
+	/**
+	 * Extracts the betti-diagram from the reduced boundary-matrix and given simplexes.
+	 * Ensure the simplexes's order to coincide with the order used to create the boundary-matrix.
+	 * 
+	 * @param simplexes : [simplex],  simplex: {dimension: number, filterLevel: integer}
+	 * @returns: {dimension -> bettyDiagram}
+	 * bettyDiagram : [bettyInterval]
+	 * bettyInterval: {start: filterLevel, end: filterLevel/undefined}
+	 */
+	function createBettiDiagram(reducedMatrix, simplexes){
+		var bettyDiagrams = {};
+		// search lowest ones	
+		var lowestOnes = [];
+		for(var row in reducedMatrix){
+			for(var col in reducedMatrix[row]){
+				if(reducedMatrix[row][col] === 1){
+					lowestOnes[col] = Math.max(lowestOnes[col] == undefined ? 0 : lowestOnes[col], row);
+				}
+			}
+		}
+		
+		_.each(simplexes, function(simplex, idx){
+			if(lowestOnes[idx] == undefined){
+				addCycle(bettyDiagrams, simplex, idx);
+			} else{
+				closeCycleInterval(bettyDiagrams, simplex, lowestOnes[idx]);
+			}
+		});		
+		return bettyDiagrams;
+	}
+	
+	/**
+	 * In bettyDiagrams sets the end-prop in bettyInterval of cycle with cycleIdx to the simplexe's filterLevel.
+	 */
+	function closeCycleInterval(bettyDiagrams, simplex, cycleIdx){
+		bettyDiagrams[simplex.dimension - 1][cycleIdx].end = simplex.filterLevel;
+	}
+	
+	/**
+	 * Adds cycle to bettyDiagrams in corresponding dimension. The simplex is the one where the reduced-matrix
+	 * has 0-column.
+	 */
+	function addCycle(bettyDiagrams, simplex, idx){
+		if(!bettyDiagrams[simplex.dimension]){
+			bettyDiagrams[simplex.dimension] = [];
+		}
+		bettyDiagrams[simplex.dimension][idx] = {start: simplex.filterLevel, end: undefined};
+	}
 	
 	/**
 	 * Enhances simplexes with id which are a json-string of there 

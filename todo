@@ -1,5 +1,7 @@
 client:
 
+- use http://nightwatchjs.org/ to test client-side
+
 - read in Hutcher about homology with coefficients
 
 - the power of this app is to have a unique front-end which combines
@@ -43,8 +45,6 @@ client:
  - 2d, 3d triangulation from data-sets: search for improved algorithm (Delenauy?) which produces nice# triangulations
   which are correctly embeddabe in 2d/3d, also how to triangulate knotes
   
-- homology: based on given complex compute homology 
-
 - implement the 'stop'-methods in Algorithm.js
 
 - general aims: ability to add algorithms at runtime, implements system as npm-module
