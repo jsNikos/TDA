@@ -12,8 +12,7 @@ module.exports = Algorithm;
  * @param args: {options : object}
  */
 function Algorithm(args){
-	args = args || {options: undefined};	
-	var scope = this;
+	args = args || {options: undefined};
 	
 	this.options = {logging: undefined /*if true, alogrithm writes logs*/ };
 	_.extend(this.options, args.options);

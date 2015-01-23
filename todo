@@ -1,5 +1,25 @@
 client:
 
+- example-code java which procuces adaptor for a perstistenceHomol-algorithm
+  Implement a standard interface on js-side which gets only the system-level call or server-url
+
+1. impl. all algorithm from paper (zigzig, complex-reduction
+
+2. complex visualization with three.js tquery
+
+3. use of external libs, some prototype and examples
+
+4. storing results in db server/locally/file (upload, download) and making them available
+
+5. apply on dynamic systems -> papers
+
+6. knotes (fundamental group, ...)
+
+7. make it a node-module
+
+
+- promise-style can be used to chain together algorithms from client-side by selection
+
 - use http://nightwatchjs.org/ to test client-side
 
 - read in Hutcher about homology with coefficients
@@ -8,6 +28,8 @@ client:
   algorithms from different source together (java, c, R), moreover it
   is backed by a real db at server-side and users can generate algorithm
   on the fly which also can be publicaly available
+
+- run code generated on client (by user) in sandbox and own child-process  (see VM)
 
 - complexes is based on a VR-complex, data can either be uploaded or obtained from a simulation
 - results can be stored in client-side db and retrieved via link
@@ -36,11 +58,7 @@ client:
   should exists a view which lets put together steps applied on data in
   a activity-diagram (drag&drop on the fly)
   
-- a view which logs currently running tasks and which let interrupt them 
-  
- - add mocha.js tests
-   have followed this: https://brianstoner.com/blog/testing-in-nodejs-with-mocha/
-   http://mochajs.org/#running-mochas-tests
+- a view which logs currently running tasks and which let interrupt them  
   
  - 2d, 3d triangulation from data-sets: search for improved algorithm (Delenauy?) which produces nice# triangulations
   which are correctly embeddabe in 2d/3d, also how to triangulate knotes
@@ -69,7 +87,7 @@ and create default-algorithm which can be extended and added as option to the sy
 - implement the application as node-module, then it can be used like so:
   require(the-system).config(port:  }.registerAlgorithms([...]).registerSimulations([....]).start();
 
-try to use three.js + tjQuery to display 3-d simulations
+try to use three.js + tjQuery + d3.js? to display 3-d simulations
 
 - create algorithm for cubical complex 
 

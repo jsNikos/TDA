@@ -7,3 +7,8 @@ the inverser-limit may be build adaptively in program
 interesting links:
 CGAL
 CHOMP
+
+
+- mocha.js tests:
+   have followed this: https://brianstoner.com/blog/testing-in-nodejs-with-mocha/
+   http://mochajs.org/#running-mochas-tests
